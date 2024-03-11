@@ -1,0 +1,54 @@
+﻿@model List<ProductManagement.Models.ProductsCategory>
+@{
+    ViewBag.Title = "Products";
+}
+
+<h2>Products</h2>
+<div class="container">
+    <div class="row">
+        @foreach (var productCategory in Model)
+            {
+            <div class="col-md-3">
+                <div class="card">
+                    <img class="card-img-top" src="@productCategory.ProdImg" alt="Category Image" width=231; height=153> <!-- Add image source here if available -->
+                    <div class="card-body">
+                        <h5 class="card-title">@productCategory.ProdName</h5>
+                        <p class="card-text">@productCategory.ProdDesc</p> <!-- If you have a description -->
+                        <a href="#" onclick="addItemToCart('@productCategory.ProdName', '@productCategory.Price')" class="btn btn-primary">Add To Cart</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    // Function to add an item to the cart
+    function addItemToCart(ProdName, Price) {
+        var item = {
+            name: ProdName,
+            price: Price,
+            quantity: 1
+        };
+        var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        var existingIndex = findItemIndexInCart(cartItems, item);
+        if (existingIndex !== -1) {
+            // Item already exists in the cart, update its quantity
+            cartItems[existingIndex].quantity += item.quantity;
+        } else {
+            // Item does not exist in the cart, add it
+            cartItems.push(item);
+        }
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }
+
+    // Function to find the index of an item in the cart
+    function findItemIndexInCart(cartItems, item) {
+        for (var i = 0; i < cartItems.length; i++) {
+            if (cartItems[i].name === item.name) {
+                return i; // Item found, return its index
+            }
+        }
+        return -1; // Item not found
+    }
+</script>

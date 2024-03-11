@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Categories";
+}
+
+<div class="container">
+    <h2>Categories</h2>
+    <div class="row" id="categoryContainer">
+        <!-- Categories will be dynamically added here -->
+    </div>
+</div>
+
+<!-- Bootstrap JS (optional, for dropdowns, modals, etc.) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Home/GetCategories', // URL to your action method that returns categories
+            type: 'GET',
+            dataType: 'json',
+            success: function (result) {
+                var categories = result.cateGories;
+                var categoryContainer = $('#categoryContainer');
+
+                categories.forEach((category) => {
+                    var categoryHtml = `
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <img class ="card-img-top" src=${category.CatImage} alt="Category Image" width=231; height=153> <!--Add image source here if available-->
+                                    <div class="card-body">
+                                        <h5 class="card-title">${category.CatName}</h5>
+                                        <p class="card-text">${category.CatDesc}</p> <!-- If you have a description -->
+                                        <a href="/Home/Products?categoryId=${category.CatId}" class="btn btn-primary">View Products</a>
+                                    </div>
+                                </div>
+                            </div>`;
+                    categoryContainer.append(categoryHtml);
+                });
+               
+            },
+            error: function () {
+                alert('Error fetching categories.');
+            }
+        });
+    });
+</script>
